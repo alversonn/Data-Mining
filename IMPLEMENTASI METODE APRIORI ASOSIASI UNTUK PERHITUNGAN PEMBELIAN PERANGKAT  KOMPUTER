@@ -1,0 +1,45 @@
+Import Liblary yang akan digunakan
+from mlxtend.frequent_patterns import apriori
+from mlxtend.frequent_patterns import association_rules
+import pandas as pd
+
+#Memasukan dataset yang akan diasosiasikan
+data = {
+'Transaksi': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+'Perangkat': [
+'Keyboard, Mouse',
+'Keyboard',
+'Mouse',
+'CPU, Keyboard',
+'Keyboard, Mouse, SSD',
+'Mouse, SSD',
+'CPU, Keyboard, Mouse',
+'CPU, Keyboard, Mouse, SSD',
+'SSD, Mouse',
+'Keyboard, Mouse, CPU',
+'CPU, Keyboard',
+'Keyboard, SSD',
+'Mouse, CPU',
+'SSD, Keyboard',
+'Keyboard, Mouse, SSD'
+]
+}
+df = pd.DataFrame(data)
+
+#Membuat itemset sebagai variable dummy dan menggabungkan dengan dataframe asli
+items = df['Perangkat'].str.get_dummies(', ')
+df = pd.concat([df['Transaksi'], items], axis=1)
+
+#Menggunakan Apriori untuk menghitung support dengan min_support=0,3 dan min_confidence = 0,7
+frequent_itemsets = apriori(df.iloc[:, 1:], min_support=0.3, use_colnames=True)
+rules = association_rules(frequent_itemsets, metric="confidence", min_threshold=0.7)
+
+#Menghapus kolom yang tidak diperlukan
+drop_columns = ['leverage', 'conviction', 'zhangs_metric']
+rules = rules.drop(drop_columns, axis=1)
+
+#Menampilkan frequent itemsets dan association rulesnya
+print("Frequent Itemsets:")
+print(frequent_itemsets)
+print("\nAssociation Rules:")
+print(rules)
