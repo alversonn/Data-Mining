@@ -1,0 +1,54 @@
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import GaussianNB
+from sklearn.metrics import accuracy_score
+from sklearn.preprocessing import LabelEncoder
+
+def accuracy_score(y_true, y_pred):
+ return round(float(sum(y_pred == y_true)) / float(len(y_true)) * 100, 2)
+
+# Data yang diberikan
+data = {
+'Cuaca': ['Cerah', 'Cerah', 'Berawan', 'Hujan', 'Hujan', 'Hujan', 'Berawan',
+'Cerah', 'Cerah', 'Hujan', 'Cerah'],
+'Suhu': ['Panas', 'Panas', 'Panas', 'Sejuk', 'Dingin', 'Dingin', 'Dingin',
+'Sejuk', 'Dingin', 'Sejuk', 'Panas'],
+'Kelembapan': ['Tinggi', 'Tinggi', 'Tinggi', 'Tinggi', 'Normal', 'Normal',
+'Normal', 'Tinggi', 'Normal', 'Normal', 'Tinggi'],
+'Berangin': ['Salah', 'Benar', 'Salah', 'Salah', 'Salah', 'Benar', 'Benar',
+'Salah', 'Salah', 'Salah', 'Salah'],
+'Main': ['Tidak', 'Tidak', 'Ya', 'Ya', 'Ya', 'Ya', 'Ya', 'Tidak', 'Ya',
+'Ya', 'Tidak']
+}
+
+df = pd.DataFrame(data)
+
+# Menerapkan label encoding
+label_encoders = {}
+df_encoded = df.copy()
+for col in df_encoded.columns:
+le = LabelEncoder()
+df_encoded[col] = le.fit_transform(df_encoded[col])
+label_encoders[col] = le
+
+# Memisahkan fitur (X) dan target (y)
+X = df_encoded.drop('Main', axis=1)
+y = df_encoded['Main']
+
+#Membagi data menjadi data pelatihan dan data pengujian
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2,
+random_state=42)
+# Membuat model Naive Bayes
+model = GaussianNB()
+#Melatih model
+model.fit(X_train, y_train)
+#Melakukan prediksi
+y_pred = model.predict(X_test)
+#Mengukur akurasi
+accuracy = accuracy_score(y_test, y_pred)
+#Output Hasil Preprocessing
+print("1. Hasil Preprocessing:")
+print(df_encoded)
+print()
+
