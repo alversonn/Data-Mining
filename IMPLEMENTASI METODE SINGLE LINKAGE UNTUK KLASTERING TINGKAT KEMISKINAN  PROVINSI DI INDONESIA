@@ -1,0 +1,28 @@
+import pandas as pd
+from scipy.cluster.hierarchy import linkage, dendrogram
+import matplotlib.pyplot as plt
+
+#Memasukan dataset
+data = {
+'Provinsi': ['BANTEN', 'DKI JAKARTA', 'JAWA BARAT', 'LAMPUNG', 'BENGKULU',
+'BALI', 'KEP. RIAU', 'GORONTALO'],
+'2015': [204.34, 400.77, 2312.2, 2033.2, 381.99, 200.1, 31.2, 197.8],
+'2016': [202.78, 372.91, 2461.58, 1989.44, 342.69, 218.7, 30.78, 202.1],
+'2017': [210.29, 387.8, 2573.9, 2084.08, 347.34, 203.1, 33.21, 194.23]
+}
+
+#Mempersiapkan data untuk analisis clustering
+df = pd.DataFrame(data)
+X = df[['2015', '2016', '2017']]
+
+#Menetapkan kolom Provinsi sebagai indeks
+df.set_index('PROVINSI', inplace=True)
+
+#Melakukan hierarchical clustering dengan metode Single Linkage
+linked = linkage(X, method='single')
+
+#Membuat dendrogram
+dendrogram(linked, labels=df.index, orientation='right') 
+# Menggunakan nama Provinsi sebagai label
+plt.title('Dendrogram Hierarchical Clustering (Single Linkage)')
+plt.show()
