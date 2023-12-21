@@ -1,1 +1,20 @@
-
+import numpy as np
+from sklearn.linear_model import LinearRegression
+laki_laki = [69, 71, 62, 72, 85, 69, 84, 63, 78, 91, 89, 68]
+perempuan = [72, 69, 73, 74, 61, 64, 76, 74, 54, 59, 70, 55]
+# Ubah data yang sudah di beri menjadi numpy Array
+laki_laki = np.array(laki_laki)
+perempuan = np.array(perempuan)
+# Bentuk Ulang array menjadi satu Kolom
+laki_laki = laki_laki.reshape(-1, 1)
+perempuan = perempuan.reshape(-1, 1)
+#Membuat objek regresi linear
+reg = LinearRegression()
+#Melatih model regresi linear menggunakan data
+reg.fit(laki_laki, perempuan)
+# Tampilkan hasil koefisien & intercept
+print('Koefisien (b) = {}'.format(reg.coef_[0][0]))
+print('Intercept (a) = {}'.format(reg.intercept_[0]))
+#Estimasikan Hasil
+print("Hasil yang didapat apabila populasi laki-laki pada bulan ke-13 adalah 60 =
+{}".format(reg.predict([[43]])[0][0]))
